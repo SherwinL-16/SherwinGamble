@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SHERWINGAMBLES | Wager Leaderboard (Demo)</title>
+<meta name="description" content="Demo wager leaderboard UI. All data is fictional.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body id="top">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="bar">
+    <a class="logo" href="#top" aria-label="Sherwin Gambles home">
+      <svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true">
+        <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c4b5fd"/><stop offset="1" stop-color="#6d28d9"/></linearGradient></defs>
+        <path d="M27 9c-3-3-13-3-13 4 0 8 13 5 13 13 0 7-11 7-15 2" fill="none" stroke="url(#lg)" stroke-width="5" stroke-linecap="round"/>
+        <path d="M31 6l3 5-6 1z" fill="#c4b5fd"/>
+      </svg>
+      <span class="logo-text"><b>SHERWIN</b><span>GAMBLES</span></span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="#top"><span data-ic="home"></span>Home</a>
+      <a href="#leaderboard" aria-current="page"><span data-ic="trophy"></span>Leaderboard</a>
+      <a href="#milestones"><span data-ic="gift"></span>Milestones</a>
+      <a href="#your-rank"><span data-ic="crown"></span>Rank Rewards</a>
+      <button type="button" data-open-rules><span data-ic="file"></span>Rules</button>
+    </nav>
+    <div class="header-right">
+      <button class="btn sm" type="button" id="login">LOGIN</button>
+      <button class="menu-btn" type="button" id="menuBtn" aria-expanded="false" aria-controls="mobileNav" aria-label="Open menu"><span data-ic="menu" data-size="24"></span></button>
+    </div>
+  </div>
+  <nav class="mobile-nav" id="mobileNav" aria-label="Mobile" hidden>
+    <a href="#top">Home</a><a href="#leaderboard">Leaderboard</a><a href="#milestones">Milestones</a><a href="#your-rank">Rank Rewards</a>
+    <button type="button" data-open-rules>Rules</button>
+  </nav>
+</header>
+
+<!-- ============ LEADERBOARD VIEW ============ -->
+<main id="main">
+  <div id="viewBoard">
+    <section class="hero">
+      <p class="period" id="period"></p>
+      <h1>WAGER LEADERBOARD</h1>
+      <p class="tagline">Play. Climb. Earn.</p>
+      <div class="cta">
+        <button class="btn" type="button" id="join">Join Now</button>
+        <button class="btn secondary" type="button" data-open-rules><span data-ic="check"></span> Leaderboard Rules</button>
+        <span class="code-hint">Use code <strong id="codeHint"></strong></span>
+      </div>
+      <p class="fine">Demo experience. Not connected to any real gambling service.</p>
+      <div class="podium" id="podium" aria-live="polite"></div>
+      <div class="countdown" id="countdown"></div>
+    </section>
+
+    <div class="wrap">
+      <section class="section first" id="leaderboard" aria-labelledby="lb-h">
+        <div class="section-head">
+          <h2 id="lb-h">Full standings</h2>
+          <label class="search"><span class="sr-only">Search player</span><span data-ic="search"></span>
+            <input type="search" id="search" placeholder="Search player" autocomplete="off"></label>
+        </div>
+        <div class="table-card">
+          <table>
+            <caption class="sr-only">Wager leaderboard</caption>
+            <thead><tr><th scope="col">PLACE</th><th scope="col">PLAYER</th><th scope="col" class="r">WAGERED</th><th scope="col" class="r">PRIZE</th></tr></thead>
+            <tbody id="rows"></tbody>
+            <tfoot><tr><th scope="row" colspan="3">TOTAL PRIZE POOL</th><td id="pool"></td></tr></tfoot>
+          </table>
+        </div>
+      </section>
+
+      <section class="section rank-card" id="your-rank" aria-labelledby="yr-h">
+        <h2 id="yr-h">YOUR RANK</h2>
+        <div id="rankBody"></div>
+        <div class="refcode">
+          <div><small>YOUR REFERRAL CODE</small><b id="refCode"></b></div>
+          <button class="btn secondary" type="button" id="copy"><span data-ic="copy"></span> COPY</button>
+        </div>
+      </section>
+
+      <section class="section" id="milestones" aria-labelledby="ms-h">
+        <div class="section-head" style="justify-content:flex-start">
+          <h2 id="ms-h">WAGER MILESTONES</h2><span class="pill">DEMO REWARDS</span>
+        </div>
+        <ul class="ms-grid" id="msGrid"></ul>
+      </section>
+    </div>
+  </div>
+
+  <!-- ============ ADMIN VIEW (#/admin) ============ -->
+  <div id="viewAdmin" class="admin" hidden>
+    <div class="warn" role="alert"><span data-ic="alert" data-size="22"></span> DEMO DATA ONLY — No real wagering or financial transactions.</div>
+    <div class="admin-top">
+      <h1>Admin demo panel</h1>
+      <div style="display:flex;gap:8px">
+        <button class="btn secondary" type="button" id="reset">Reset</button>
+        <a class="btn" href="#top">Back to site</a>
+      </div>
+    </div>
+    <section class="panel" aria-label="Competition settings">
+      <div class="fields">
+        <label class="f">Start date<input class="in" type="date" id="fStart"></label>
+        <label class="f">End date (UTC midnight)<input class="in" type="date" id="fEnd"></label>
+        <label class="f">Prize pool ($)<input class="in" type="number" min="0" id="fPool"></label>
+      </div>
+    </section>
+    <form class="panel add-form" id="addForm">
+      <label class="f">New demo player<input class="in" id="aName" placeholder="e.g. Marian" required></label>
+      <label class="f">Demo wager<input class="in" id="aWager" type="number" min="0" step="0.01"></label>
+      <button class="btn" type="submit">Add</button>
+    </form>
+    <div class="panel scroll-x" style="padding:0">
+      <table id="adminTable">
+        <caption class="sr-only">Edit demo players</caption>
+        <thead><tr><th>PLACE</th><th>PLAYER</th><th>WAGER ($)</th><th>PRIZE FOR PLACE ($)</th><th>RANK</th></tr></thead>
+        <tbody id="adminRows"></tbody>
+      </table>
+      <p class="empty" id="adminEmpty" hidden>No demo players. Add one above.</p>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">© 2026 SHERWINGAMBLES · Demo UI only. All players, wagers and prizes are fictional. <a href="#/admin">Admin</a></footer>
+
+<dialog id="rules" aria-labelledby="rules-h">
+  <div class="dh"><h2 id="rules-h">Leaderboard Rules</h2><button class="x" type="button" id="closeRules" aria-label="Close rules"><span data-ic="x" data-size="22"></span></button></div>
+  <ol>
+    <li>This is a demonstration leaderboard.</li>
+    <li>All displayed wager values are mock data.</li>
+    <li>Rankings are determined by total qualifying wager volume during the competition period.</li>
+    <li>Only demo users are displayed.</li>
+    <li>Prize values shown are demonstration values.</li>
+    <li>No real-money deposits, withdrawals, or betting functionality is implemented.</li>
+    <li>The leaderboard resets when the competition ends.</li>
+  </ol>
+  <button class="btn" type="button" id="gotIt">Got it</button>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ============ Icons (inline SVG paths) ============ */
+const PATHS = {
+  home:'<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>',
+  trophy:'<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.7V17c0 .6-.5 1-1.2 1.2C7.8 18.8 7 20.2 7 22M14 14.7V17c0 .6.5 1 1.2 1.2 1 .6 1.8 2 1.8 3.8M18 2H6v7a6 6 0 0 0 12 0z"/>',
+  gift:'<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/>',
+  crown:'<path d="M2 20h20M4 20 2 6l6 5 4-7 4 7 6-5-2 14"/>',
+  file:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8"/>',
+  clock:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+  copy:'<rect x="8" y="8" width="14" height="14" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>',
+  lock:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  unlock:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>',
+  search:'<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+  check:'<path d="M20 6 9 17l-5-5"/>',
+  menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',
+  x:'<path d="M18 6 6 18M6 6l12 12"/>',
+  alert:'<path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3z"/><path d="M12 9v4M12 17h.01"/>',
+};
+const ic = (n, s = 16) => `<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${PATHS[n]}</svg>`;
+document.querySelectorAll('[data-ic]').forEach(el => { el.innerHTML = ic(el.dataset.ic, +el.dataset.size || 16); });
+
+/* ============ Demo data + storage ============ */
+const KEY = 'sherwingambles_demo_v1';
+const SEED = {
+  players: [['Sherwin******',6125.22],['Raven******',5083.64],['Its******',2010],['Big******',910],['Gam******',399.33],['Lil******',187.02],
+    ['Sam******',138.44],['Go******',110.19],['Ja******',95],['UA******',63.94],['Jay******',58],['Jx******',45.25],['Da******',7],
+    ['Cal******',5],['De******',1.77],['Zoe******',1.4]].map(([name, wager], i) => ({ id: i + 1, name, wager })),
+  prizes: [10000,6000,4000,2250,1500,1300,900,700,575,500,400,350,300,250,225,200],
+  pool: 30000, start: '2026-09-03', end: '2026-10-03', me: 'Sherwin******', code: 'SHERWIN',
+};
+const MILESTONES = [[100,10],[500,25],[1000,50],[5000,250],[10000,500]];
+let state = load(), loading = true, query = '';
+
+function load() { try { const r = JSON.parse(localStorage.getItem(KEY)); if (r && r.players) return r; } catch (e) {} return JSON.parse(JSON.stringify(SEED)); }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* storage blocked: session still works */ } }
+
+/* ============ Utils ============ */
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+const money = (n) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n || 0);
+const short = (n) => money(n).replace('.00', '');
+const longDate = (iso) => new Date(iso + 'T00:00:00Z').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+const mask = (n) => (n.includes('*') ? n : n.trim().slice(0, 4) + '******');
+const ranked = () => [...state.players].sort((a, b) => b.wager - a.wager || a.id - b.id).map((p, i) => ({ ...p, place: i + 1, prize: state.prizes[i] || 0 }));
+let toastTimer;
+function toast(msg) { const t = $('toast'); t.innerHTML = ic('check') + esc(msg); t.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2400); }
+
+/* ============ Renderers ============ */
+const hex = (color, s) => `<svg width="${s}" height="${s}" viewBox="0 0 100 100" aria-hidden="true"><polygon points="50,4 91,27 91,73 50,96 9,73 9,27" fill="#0d0a16" stroke="${color}" stroke-width="4"/><path d="M62 34c-6-6-25-5-25 7 0 14 25 8 25 22 0 12-21 12-28 3" fill="none" stroke="#8b5cf6" stroke-width="8" stroke-linecap="round"/></svg>`;
+const COLORS = { 1: '#f5c542', 2: '#d5d8de', 3: '#ff7a4d' };
+const ORD = { 1: '1st', 2: '2nd', 3: '3rd' };
+
+function renderPodium() {
+  const el = $('podium'), list = ranked();
+  el.setAttribute('aria-busy', loading);
+  if (loading) { el.innerHTML = '<div class="pskel"></div><div class="pskel"></div><div class="pskel"></div>'; return; }
+  if (list.length < 3) { el.innerHTML = '<p class="empty" style="grid-column:1/-1">Add at least three demo players to show the podium.</p>'; return; }
+  const card = (p) => `<article class="pcard p${p.place}" aria-label="${ORD[p.place]} place">
+    <div class="avatar">${p.place === 1 ? `<span class="crown">${ic('crown', 28)}</span>` : ''}${hex(COLORS[p.place], p.place === 1 ? 112 : 88)}<span class="badge">${p.place}</span></div>
+    <h3 class="pname">${esc(p.name)}</h3><p class="plabel">WAGERED</p><p class="pwager">${money(p.wager)}</p>
+    <p class="pprize">${ic('gift', p.place === 1 ? 22 : 18)}${short(p.prize)}</p></article>`;
+  el.innerHTML = card(list[1]) + card(list[0]) + card(list[2]);
+}
+
+function renderTable() {
+  const list = ranked(), q = query.trim().toLowerCase(), rows = list.filter((p) => p.name.toLowerCase().includes(q));
+  $('pool').textContent = short(state.pool);
+  let html = '';
+  if (loading) html = Array(6).fill('<tr><td colspan="4"><div class="skel"></div></td></tr>').join('');
+  else if (!rows.length) html = `<tr><td colspan="4" class="empty">${list.length ? `No players match "${esc(query)}".` : 'No players yet. Add some in the admin panel.'}</td></tr>`;
+  else html = rows.map((p) => {
+    const mine = p.name === state.me;
+    return `<tr class="${mine ? 'me' : ''}"${mine ? ' aria-current="true"' : ''}>
+      <td class="place ${p.place <= 3 ? 't' + p.place : ''}">${String(p.place).padStart(2, '0')}</td>
+      <td><span class="who">${hex('#3b2a66', 26)}${esc(p.name)}${mine ? '<span class="you">You</span>' : ''}</span></td>
+      <td class="r" style="color:#d1cce0">${money(p.wager)}</td><td class="r prize">${p.prize ? short(p.prize) : '—'}</td></tr>`;
+  }).join('');
+  $('rows').innerHTML = html;
+}
+
+function renderRank() {
+  const list = ranked(), mine = list.find((p) => p.name === state.me), top = list[0];
+  if (!mine) { $('rankBody').innerHTML = '<p class="bar-note" style="margin-top:16px;font-size:14px">Your account isn\'t on the board right now.</p>'; return; }
+  const above = list[mine.place - 2], pct = top && top.wager ? Math.min(100, mine.wager / top.wager * 100) : 0;
+  const s = (l, v) => `<div class="stat"><small>${l}</small><b>${v}</b></div>`;
+  $('rankBody').innerHTML = `<div class="stats">${s('CURRENT RANK', '#' + mine.place)}${s('YOUR WAGER', money(mine.wager))}${s('PRIZE', mine.prize ? short(mine.prize) : '—')}${s('NEXT RANK', above ? money(above.wager - mine.wager + 0.01) + ' to go' : 'N/A')}</div>
+    <div role="progressbar" aria-valuenow="${Math.round(pct)}" aria-valuemin="0" aria-valuemax="100" aria-label="Progress toward first place">
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div><p class="bar-note">${pct.toFixed(0)}% of the way to the top spot</p></div>`;
+}
+
+function renderMilestones() {
+  const mine = ranked().find((p) => p.name === state.me), w = mine ? mine.wager : 0;
+  $('msGrid').innerHTML = MILESTONES.map(([t, r]) => {
+    const done = w >= t, pct = Math.min(100, w / t * 100);
+    return `<li class="ms ${done ? 'done' : ''}"><div class="ms-top"><span>${short(t)} <small>WAGERED</small></span>${ic(done ? 'unlock' : 'lock', 18)}</div>
+      <p>Reward: <strong>${short(r)}</strong> <small>(demo)</small></p>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+      <p class="ms-state">${done ? 'UNLOCKED' : 'LOCKED · ' + pct.toFixed(0) + '%'}</p></li>`;
+  }).join('');
+}
+
+function renderHero() {
+  $('period').textContent = `${longDate(state.start)} — ${longDate(state.end)} (UTC)`;
+  $('codeHint').textContent = state.code;
+  $('refCode').textContent = state.code;
+}
+
+function renderAdmin() {
+  const list = ranked();
+  $('fStart').value = state.start; $('fEnd').value = state.end; $('fPool').value = state.pool;
+  $('adminEmpty').hidden = list.length > 0;
+  $('adminRows').innerHTML = list.map((p, i) => `<tr data-id="${p.id}" data-i="${i}">
+    <td class="place">${p.place}</td>
+    <td><input class="in" data-f="name" aria-label="Name for place ${p.place}" value="${esc(p.name)}"></td>
+    <td><input class="in" data-f="wager" type="number" min="0" step="0.01" aria-label="Wager for ${esc(p.name)}" value="${p.wager}"></td>
+    <td><input class="in" data-f="prize" type="number" min="0" aria-label="Prize for place ${p.place}" value="${p.prize}"></td>
+    <td class="actions"><button class="icon-btn" data-a="up" aria-label="Move ${esc(p.name)} up">▲</button><button class="icon-btn" data-a="down" aria-label="Move ${esc(p.name)} down">▼</button><button class="icon-btn del" data-a="del" aria-label="Remove ${esc(p.name)}">✕</button></td></tr>`).join('');
+}
+
+function renderAll() { renderHero(); renderPodium(); renderTable(); renderRank(); renderMilestones(); renderAdmin(); tick(); }
+function commit(msg) { save(); renderAll(); if (msg) toast(msg); }
+
+/* ============ Countdown ============ */
+function tick() {
+  const t = new Date(state.end + 'T00:00:00Z').getTime(), box = $('countdown');
+  const s = isNaN(t) ? 0 : Math.max(0, Math.floor((t - Date.now()) / 1000));
+  if (s <= 0) { box.innerHTML = '<p class="ended">COMPETITION ENDED</p>'; return; }
+  const parts = [['Days', Math.floor(s / 86400)], ['Hours', Math.floor(s % 86400 / 3600)], ['Minutes', Math.floor(s % 3600 / 60)], ['Seconds', s % 60]];
+  if (!box.querySelector('[role=timer]')) box.innerHTML = `<p class="cd-label" id="cdl">${ic('clock')} LEADERBOARD ENDS IN</p><div class="cd-grid" role="timer" aria-labelledby="cdl">${parts.map(([l]) => `<div class="cd-box"><b></b><span>${l.toUpperCase()}</span></div>`).join('')}</div>`;
+  box.querySelectorAll('.cd-box b').forEach((b, i) => { b.textContent = String(parts[i][1]).padStart(2, '0'); });
+}
+setInterval(tick, 1000);
+
+/* ============ Events ============ */
+const rules = $('rules');
+document.querySelectorAll('[data-open-rules]').forEach((b) => b.addEventListener('click', () => { $('mobileNav').hidden = true; rules.showModal(); }));
+$('closeRules').onclick = $('gotIt').onclick = () => rules.close();
+rules.addEventListener('click', (e) => { if (e.target === rules) rules.close(); });
+
+$('menuBtn').onclick = () => { const m = $('mobileNav'); m.hidden = !m.hidden; $('menuBtn').setAttribute('aria-expanded', String(!m.hidden)); };
+document.querySelectorAll('#mobileNav a').forEach((a) => a.addEventListener('click', () => { $('mobileNav').hidden = true; }));
+$('login').onclick = () => toast('Demo only: login is not implemented');
+$('join').onclick = () => toast('Demo only: nothing to join');
+$('search').addEventListener('input', (e) => { query = e.target.value; renderTable(); });
+$('copy').onclick = async () => { try { await navigator.clipboard.writeText(state.code); } catch (e) { /* clipboard blocked: still confirm in demo */ } toast('Copied!'); };
+
+/* Admin */
+$('fStart').onchange = (e) => { state.start = e.target.value; commit('Start date updated'); };
+$('fEnd').onchange = (e) => { state.end = e.target.value; commit('End date updated'); };
+$('fPool').onchange = (e) => { state.pool = Math.max(0, Number(e.target.value) || 0); commit('Prize pool updated'); };
+$('addForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const name = $('aName').value;
+  if (!name.trim()) return toast('Enter a player name');
+  state.players.push({ id: Date.now(), name: mask(name), wager: Math.max(0, Number($('aWager').value) || 0) });
+  e.target.reset(); commit('Demo player added');
+});
+$('reset').onclick = () => { if (confirm('Reset all demo data?')) { state = JSON.parse(JSON.stringify(SEED)); commit('Leaderboard reset'); } };
+$('adminRows').addEventListener('change', (e) => {
+  const tr = e.target.closest('tr'), id = +tr.dataset.id, i = +tr.dataset.i, f = e.target.dataset.f, p = state.players.find((x) => x.id === id);
+  if (f === 'name') p.name = e.target.value || p.name;
+  if (f === 'wager') p.wager = Math.max(0, Number(e.target.value) || 0);
+  if (f === 'prize') { while (state.prizes.length <= i) state.prizes.push(0); state.prizes[i] = Math.max(0, Number(e.target.value) || 0); }
+  commit('Saved');
+});
+$('adminRows').addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-a]'); if (!btn) return;
+  const tr = btn.closest('tr'), id = +tr.dataset.id, i = +tr.dataset.i, list = ranked(), a = btn.dataset.a;
+  if (a === 'del') { state.players = state.players.filter((x) => x.id !== id); return commit('Player removed'); }
+  const other = list[i + (a === 'up' ? -1 : 1)]; if (!other) return;
+  const me = state.players.find((x) => x.id === id), them = state.players.find((x) => x.id === other.id);
+  [me.wager, them.wager] = [them.wager, me.wager];   // swapping wagers swaps rank
+  commit('Rank changed');
+});
+
+/* Hash routing: #/admin shows the admin panel */
+function route() {
+  const admin = location.hash.startsWith('#/admin');
+  $('viewAdmin').hidden = !admin; $('viewBoard').hidden = admin;
+  if (admin) window.scrollTo(0, 0);
+}
+window.addEventListener('hashchange', route);
+
+route(); renderAll();
+setTimeout(() => { loading = false; renderPodium(); renderTable(); }, 700);
+</script>
+</body>
+</html>
